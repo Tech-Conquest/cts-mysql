@@ -5,7 +5,7 @@
 ### - [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)
 
 ## Codebase Setup:
-##### clone https://bitbucket.org/ei-india-admin/mindsparkenglish/src/master/ to Xampfiles/htdocs
+##### clone https://github.com/Tech-Conquest/cts-mysql-setup.git 
 ## Build an Image
 ```
 docker build -t mysql:v1 .
