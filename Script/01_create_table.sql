@@ -13,7 +13,7 @@ CREATE TABLE `CTS`.`Member` (
 
 CREATE TABLE `CTS`.`Contact` (
   `id` int PRIMARY KEY,
-  `phone` varchar(10),
+  `phone` varchar(50),
   `addressLineOne` varchar(100),
   `addressLineTwo` varchar(100),
   `locationId` int,
@@ -38,7 +38,7 @@ CREATE TABLE `CTS`.`Location` (
 
 CREATE TABLE `CTS`.`Country` (
   `id` int PRIMARY KEY,
-  `name` varchar(10),
+  `name` varchar(50),
   `createdAt` datetime,
   `createdBy` int,
   `updatedAt` datetime,
@@ -58,7 +58,7 @@ CREATE TABLE `CTS`.`State` (
 CREATE TABLE `CTS`.`City` (
   `id` int PRIMARY KEY,
   `stateId` int,
-  `name` varchar(10),
+  `name` varchar(50),
   `createdAt` datetime,
   `createdBy` int,
   `updatedAt` datetime,
@@ -67,7 +67,7 @@ CREATE TABLE `CTS`.`City` (
 
 CREATE TABLE `CTS`.`MemberRole_m` (
   `id` int PRIMARY KEY,
-  `name` varchar(10),
+  `name` varchar(50),
   `createdAt` datetime,
   `createdBy` int,
   `updatedAt` datetime,
@@ -122,7 +122,7 @@ CREATE TABLE `CTS`.`TossResults` (
   `matchId` int PRIMARY KEY,
   `tossChoiceId` int,
   `tossWonBy` int,
-  `decision` varchar(10),
+  `decision` varchar(50),
   `createdAt` datetime,
   `createdBy` int,
   `updatedAt` datetime,
@@ -176,11 +176,60 @@ CREATE TABLE `CTS`.`Balls` (
 
 CREATE TABLE `CTS`.`WicketsType_m` (
   `id` int PRIMARY KEY,
-  `name` varchar(10),
+  `name` varchar(50),
   `createdAt` datetime,
   `createdBy` int,
   `updatedAt` datetime,
   `updatedBy` int
+);
+
+CREATE TABLE `CTS`.`Users` (
+  `id` int PRIMARY KEY,
+  `username` varchar(50),
+  `password` varchar(8),
+  `contactId` int,
+  `userType` int,
+  `isAccountLocked` boolean,
+  `isLoggedIn` boolean,
+  `createdAt` datetime,
+  `createdBy` int,
+  `updatedAt` datetime,
+  `updatedBy` int
+);
+
+CREATE TABLE `CTS`.`UserType_m` (
+  `id` int PRIMARY KEY,
+  `name` varchar(50),
+  `createdAt` datetime,
+  `createdBy` int,
+  `updatedAt` datetime,
+  `updatedBy` int
+);
+
+CREATE TABLE `CTS`.`SessionDetails` (
+  `id` int,
+  `userId` int,
+  `userAgent` varchar(100),
+  `ipAddress` varchar(15),
+  `platform` varchar(50),
+  `jwtCode` varchar(255),
+  `sessionExpiry` int,
+  `loginTime` datetime,
+  `logoutTime` datetime,
+  `createdAt` datetime,
+  `createdBy` int,
+  `updatedAt` datetime,
+  `updatedBy` int
+);
+
+CREATE TABLE `CTS`.`Audit` (
+  `id` int,
+  `userId` int,
+  `jwtCode` varchar(255),
+  `action` varchar(100),
+  `description` varchar(255),
+  `createdAt` datetime,
+  `createdBy` int
 );
 
 ALTER TABLE `CTS`.`Member` ADD FOREIGN KEY (`contactId`) REFERENCES `CTS`.`Contact` (`id`);
@@ -234,3 +283,11 @@ ALTER TABLE `CTS`.`Balls` ADD FOREIGN KEY (`striker`) REFERENCES `CTS`.`Member` 
 ALTER TABLE `CTS`.`Balls` ADD FOREIGN KEY (`nonStriker`) REFERENCES `CTS`.`Member` (`id`);
 
 ALTER TABLE `CTS`.`Balls` ADD FOREIGN KEY (`bowler`) REFERENCES `CTS`.`Member` (`id`);
+
+ALTER TABLE `CTS`.`Users` ADD FOREIGN KEY (`contactId`) REFERENCES `CTS`.`Contact` (`id`);
+
+ALTER TABLE `CTS`.`Users` ADD FOREIGN KEY (`userType`) REFERENCES `CTS`.`UserType_m` (`id`);
+
+ALTER TABLE `CTS`.`SessionDetails` ADD FOREIGN KEY (`userId`) REFERENCES `CTS`.`Users` (`id`);
+
+ALTER TABLE `CTS`.`Audit` ADD FOREIGN KEY (`userId`) REFERENCES `CTS`.`Users` (`id`);
