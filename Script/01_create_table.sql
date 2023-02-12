@@ -1,5 +1,9 @@
 CREATE SCHEMA `CTS`;
 
+CREATE SCHEMA `User`;
+
+CREATE SCHEMA `Adm`;
+
 CREATE TABLE `CTS`.`Member` (
   `id` int PRIMARY KEY,
   `name` varchar(20),
@@ -183,6 +187,55 @@ CREATE TABLE `CTS`.`WicketsType_m` (
   `updatedBy` int
 );
 
+CREATE TABLE `User`.`Users` (
+  `id` int PRIMARY KEY,
+  `username` varchar(50),
+  `password` varchar(8),
+  `contactId` int,
+  `userType` int,
+  `isAccountLocked` boolean,
+  `isLoggedIn` boolean,
+  `createdAt` datetime,
+  `createdBy` int,
+  `updatedAt` datetime,
+  `updatedBy` int
+);
+
+CREATE TABLE `User`.`UserType_m` (
+  `id` int PRIMARY KEY,
+  `name` varchar(10),
+  `createdAt` datetime,
+  `createdBy` int,
+  `updatedAt` datetime,
+  `updatedBy` int
+);
+
+CREATE TABLE `User`.`SessionDetails` (
+  `id` int,
+  `userId` int,
+  `userAgent` varchar(255)
+  `ipAddress` varchar(15),
+  `platform` varchar(10),
+  `jwtCode` varchar(255),
+  `sessionExpiry` int,
+  `loginTime` datetime,
+  `logoutTime` datetime,
+  `createdAt` datetime,
+  `createdBy` int,
+  `updatedAt` datetime,
+  `updatedBy` int
+);
+
+CREATE TABLE `Adm`.`Audit` (
+  `id` int,
+  `userId` int,
+  `jwtCode` varchar(255),
+  `action` varchar(100),
+  `description` varchar(255),
+  `createdAt` datetime,
+  `createdBy` int
+);
+
 ALTER TABLE `CTS`.`Member` ADD FOREIGN KEY (`contactId`) REFERENCES `CTS`.`Contact` (`id`);
 
 ALTER TABLE `CTS`.`Contact` ADD FOREIGN KEY (`locationId`) REFERENCES `CTS`.`Location` (`id`);
@@ -234,3 +287,11 @@ ALTER TABLE `CTS`.`Balls` ADD FOREIGN KEY (`striker`) REFERENCES `CTS`.`Member` 
 ALTER TABLE `CTS`.`Balls` ADD FOREIGN KEY (`nonStriker`) REFERENCES `CTS`.`Member` (`id`);
 
 ALTER TABLE `CTS`.`Balls` ADD FOREIGN KEY (`bowler`) REFERENCES `CTS`.`Member` (`id`);
+
+ALTER TABLE `User`.`Users` ADD FOREIGN KEY (`contactId`) REFERENCES `CTS`.`Contact` (`id`);
+
+ALTER TABLE `User`.`Users` ADD FOREIGN KEY (`userType`) REFERENCES `User`.`UserType_m` (`id`);
+
+ALTER TABLE `User`.`SessionDetails` ADD FOREIGN KEY (`userId`) REFERENCES `User`.`Users` (`id`);
+
+ALTER TABLE `Adm`.`Audit` ADD FOREIGN KEY (`userId`) REFERENCES `User`.`Users` (`id`);
